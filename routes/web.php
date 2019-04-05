@@ -11,14 +11,11 @@
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
 Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/post/{post}', 'HomeController@showPost')->name('post.show');
+Route::post('/post/{post}/comments', 'CommentController@store')->name('comments.store');
 
 
 Route::namespace('BackOffice')
@@ -26,9 +23,6 @@ Route::namespace('BackOffice')
     ->prefix('back-offise')
     ->name('back-office.')
     ->group(function () {
-    Route::get('/posts', 'PostController@index')->name('posts');
+        Route::get('/posts', 'PostController@index')->name('posts');
         Route::resource('posts', 'PostController');
-
-    // Route::get('/posts/create', 'PostController@create')->name('posts.create');
-    // Route::post('/posts/store', 'PostController@store')->name('posts.store');
-});
+    });

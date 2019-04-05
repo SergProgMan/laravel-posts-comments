@@ -19,12 +19,19 @@ class Post extends Model
     {
         return $this->belongsTo('App\User');
     }
-    
-    public function getShortTitle(){
+
+    public function getShortTitle()
+    {
         return str_limit($this->title, 50);
     }
 
-    public function getShortContent(){
+    public function getShortContent()
+    {
         return str_limit($this->content, 300);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany('App\Comment');
     }
 }

@@ -16,8 +16,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        $user=Auth::user();
-        $posts=$user->posts()->latest()->paginate(15);
+        $user = Auth::user();
+        $posts = $user->posts()->latest()->paginate(15);
         return view('backOffice.index', compact('posts'));
     }
 
@@ -28,13 +28,13 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view ('backOffice.create');
+        return view('backOffice.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -59,7 +59,7 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Post  $post
+     * @param  \App\Post $post
      * @return \Illuminate\Http\Response
      */
     public function show(Post $post)
@@ -70,7 +70,7 @@ class PostController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Post  $post
+     * @param  \App\Post $post
      * @return \Illuminate\Http\Response
      */
     public function edit(Post $post)
@@ -81,18 +81,18 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Post  $post
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Post $post
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Post $post)
     {
-        if($post->user_id == Auth::user()->id){
+        if ($post->user_id == Auth::user()->id) {
             $request->validate([
                 'title' => 'required|max:255|string',
                 'content' => 'required|string',
             ]);
-            
+
             $post->fill($request->all());
 
             $post->save();
@@ -105,15 +105,15 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Post  $post
+     * @param  \App\Post $post
      * @return \Illuminate\Http\Response
      */
     public function destroy(Post $post)
     {
-        if($post->user_id == Auth::user()->id){
+        if ($post->user_id == Auth::user()->id) {
             $post->delete();
             return redirect(route('back-office.posts.index'))
-            ->with(['status' => 'Post deleted!']);
+                ->with(['status' => 'Post deleted!']);
         }
     }
 }
