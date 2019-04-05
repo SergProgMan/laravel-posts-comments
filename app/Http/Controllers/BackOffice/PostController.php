@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\BackOffice;
 
 use App\Post;
+use Auth;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class PostController extends Controller
 {
@@ -14,7 +16,9 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $user=Auth::user();
+        $posts=$user->posts()->latest()->paginate(15);
+        return view('backOffice.index', compact('posts'));
     }
 
     /**
@@ -24,7 +28,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view ('backOffice.create');
     }
 
     /**
@@ -35,7 +39,21 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|max:255|string',
+            'content' => 'required|string',
+        ]);
+
+        $post = new Post;
+        $post->fill($request->all());
+
+        $user = Auth::user();
+        $post->user()->associate($user);
+
+        $post->save();
+
+        return redirect(route('back-office.posts.index'))
+            ->with(['status' => 'Post created!']);
     }
 
     /**
@@ -57,7 +75,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        return view('backOffice.edit', compact('post'));
     }
 
     /**
@@ -69,7 +87,19 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        if($post->user_id == Auth::user()->id){
+            $request->validate([
+                'title' => 'required|max:255|string',
+                'content' => 'required|string',
+            ]);
+            
+            $post->fill($request->all());
+
+            $post->save();
+
+            return redirect(route('back-office.posts.index'))
+                ->with(['status' => 'Post updated!']);
+        }
     }
 
     /**
@@ -80,6 +110,10 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        if($post->user_id == Auth::user()->id){
+            $post->delete();
+            return redirect(route('back-office.posts.index'))
+            ->with(['status' => 'Post deleted!']);
+        }
     }
 }

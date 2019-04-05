@@ -17,5 +17,18 @@
 
 Auth::routes();
 
-//Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/', 'HomeController@index')->name('home');
+Route::get('/post/{post}', 'HomeController@showPost')->name('post.show');
+
+
+Route::namespace('BackOffice')
+    ->middleware('auth')
+    ->prefix('back-offise')
+    ->name('back-office.')
+    ->group(function () {
+    Route::get('/posts', 'PostController@index')->name('posts');
+        Route::resource('posts', 'PostController');
+
+    // Route::get('/posts/create', 'PostController@create')->name('posts.create');
+    // Route::post('/posts/store', 'PostController@store')->name('posts.store');
+});

@@ -7,11 +7,7 @@ use App\Post;
 
 class HomeController extends Controller
 {
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
+   
     public function index(Request $request)
     {
         $posts = Post::latest()->paginate(20);
@@ -21,5 +17,10 @@ class HomeController extends Controller
             return response()->json(['html'=>$view]);
         }
         return view('home', compact('posts'));
+    }
+
+    public function showPost(Post $post){
+        //dd($post);
+        return view('post', compact('post'));
     }
 }
